@@ -37,7 +37,7 @@ def vgg_16():
     model_vgg16 = models.Sequential()
     model_vgg16.add(base_vgg16)
     model_vgg16.add(layers.Flatten())
-    model_vgg16.add(layers.Dense(128, activation='relu'))
+    model_vgg16.add(layers.Dense(128, activation='sigmoid'))
     model_vgg16.add(layers.Dropout(0.5))
     model_vgg16.add(layers.Dense(4, activation='softmax'))
     return model_vgg16
@@ -48,7 +48,7 @@ def vgg_19():
     model_vgg19 = models.Sequential()
     model_vgg19.add(base_vgg19)
     model_vgg19.add(layers.Flatten())
-    model_vgg19.add(layers.Dense(128, activation='relu'))
+    model_vgg19.add(layers.Dense(128, activation='sigmoid'))
     model_vgg19.add(layers.Dropout(0.5))
     model_vgg19.add(layers.Dense(4, activation='softmax'))
     return model_vgg19
@@ -62,4 +62,5 @@ def efficientnet(base_model):
     model_efficientnet_b3.add(layers.Dense(128, activation='relu'))
     model_efficientnet_b3.add(layers.Dropout(0.5))
     model_efficientnet_b3.add(layers.Dense(4, activation='softmax'))
+    return model_efficientnet_b3
 

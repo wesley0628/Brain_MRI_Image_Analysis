@@ -52,3 +52,14 @@ def vgg_19():
     model_vgg19.add(layers.Dropout(0.5))
     model_vgg19.add(layers.Dense(4, activation='softmax'))
     return model_vgg19
+
+
+def efficientnet(base_model):
+    base_efficientnet = base_model
+    model_efficientnet_b3 = models.Sequential()
+    model_efficientnet_b3.add(base_efficientnet)
+    model_efficientnet_b3.add(layers.Flatten())
+    model_efficientnet_b3.add(layers.Dense(128, activation='relu'))
+    model_efficientnet_b3.add(layers.Dropout(0.5))
+    model_efficientnet_b3.add(layers.Dense(4, activation='softmax'))
+

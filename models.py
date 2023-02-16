@@ -1,8 +1,9 @@
-from keras import layers, models
+from keras import layers, models, regularizers
 from keras.applications.vgg19 import *
 from keras.applications.resnet import *
 from keras.applications.efficientnet import *
 from keras.applications.vgg16 import *
+from keras.layers import GlobalAveragePooling2D, BatchNormalization
 
 
 def simple_cnn():
@@ -37,7 +38,7 @@ def vgg_16():
     model_vgg16 = models.Sequential()
     model_vgg16.add(base_vgg16)
     model_vgg16.add(layers.Flatten())
-    model_vgg16.add(layers.Dense(128, activation='sigmoid'))
+    model_vgg16.add(layers.Dense(128, activation='relu'))
     model_vgg16.add(layers.Dropout(0.5))
     model_vgg16.add(layers.Dense(4, activation='softmax'))
     return model_vgg16
@@ -48,7 +49,7 @@ def vgg_19():
     model_vgg19 = models.Sequential()
     model_vgg19.add(base_vgg19)
     model_vgg19.add(layers.Flatten())
-    model_vgg19.add(layers.Dense(128, activation='sigmoid'))
+    model_vgg19.add(layers.Dense(128, kernel_regularizer='l2', activation='relu'))
     model_vgg19.add(layers.Dropout(0.5))
     model_vgg19.add(layers.Dense(4, activation='softmax'))
     return model_vgg19
@@ -56,11 +57,13 @@ def vgg_19():
 
 def efficientnet(base_model):
     base_efficientnet = base_model
-    model_efficientnet_b3 = models.Sequential()
-    model_efficientnet_b3.add(base_efficientnet)
-    model_efficientnet_b3.add(layers.Flatten())
-    model_efficientnet_b3.add(layers.Dense(128, activation='relu'))
-    model_efficientnet_b3.add(layers.Dropout(0.5))
-    model_efficientnet_b3.add(layers.Dense(4, activation='softmax'))
-    return model_efficientnet_b3
+    model_efficientnet = models.Sequential()
+    model_efficientnet.add(base_efficientnet)
+    model_efficientnet.add(layers.BatchNormalization(axis=-1, momentum=0.99, epsilon=0.001))
+    model_efficientnet.add(layers.Dense(256, kernel_regularizer=regularizers.l2(l=0.016),
+                                        activity_regularizer=regularizers.l1(0.006),
+                           bias_regularizer=regularizers.l1(0.006), activation='relu'))
+    model_efficientnet.add(layers.Dropout(0.5))
+    model_efficientnet.add(layers.Dense(4, activation='softmax'))
+    return model_efficientnet
 
